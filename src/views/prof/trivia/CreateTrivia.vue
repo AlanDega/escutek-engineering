@@ -247,7 +247,7 @@ export default {
   },
   methods: {
     select1(){
-      console.log('selected2')
+      console.log('selected23')
       this.selected1 = true
       this.right_answer = this.answer1
     },
