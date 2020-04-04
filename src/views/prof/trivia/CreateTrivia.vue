@@ -75,10 +75,10 @@
           <v-row class="answers">
             <v-col cols="6">
               <v-row justify="center">
-                <v-card height="100" width="500" color="green">
+                <v-card height="100" width="400" color="green">
                   <v-card-text>
                     <v-row>
-                      <v-col cols="10">
+                      <v-col cols="9">
                         <v-text-field
                         color="white"
                           v-model="answer1"
@@ -99,16 +99,16 @@
                 </v-card>
               </v-row>
               <v-row justify="center" class="mt-6">
-                <v-card height="100" width="500" color="blue">
+                <v-card height="100" width="400" color="blue">
                   <v-card-text>
                    <v-row>
-                      <v-col cols="10">
+                      <v-col cols="9">
                         <v-text-field
                           v-model="answer2"
                           label="Agrega Respuesta 2"
                         ></v-text-field>
                       </v-col>
-                      <v-col>
+                      <v-col cols="3">
                         <v-btn
                           fab
                           color="blue"
@@ -127,7 +127,7 @@
                 <v-card height="100" width="500" color="yellow">
                   <v-card-text>
                    <v-row>
-                      <v-col cols="10">
+                      <v-col cols="9">
                         <v-text-field
                           v-model="answer3"
                           label="Agrega Respuesta 3"
@@ -150,7 +150,7 @@
                 <v-card height="100" width="500" color="red">
                   <v-card-text>
                    <v-row>
-                      <v-col cols="10">
+                      <v-col cols="9">
                         <v-text-field
                           v-model="answer4"
                           label="Agrega Respuesta 4"
