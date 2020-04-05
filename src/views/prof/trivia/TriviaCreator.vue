@@ -3,7 +3,11 @@
     <v-app-bar color="white">
       <v-spacer></v-spacer>
       <v-row class="fill-height" justify="center" align="center">
+        <template v-slot:activator="{on}">
+        </template>
         <v-text-field
+        append-icon="mdi-image-area"
+        @click:append="showCover"
           class="mt-2"
           color="deep-purple accent-3"
           v-model="title"
@@ -217,7 +221,7 @@
                 >
               </v-row>
             </v-container>
-            <!-- <v-container>
+            <v-container>
                 <vue-dropzone
                 id="dropzone2"
                 class="zone2"
@@ -227,7 +231,7 @@
                 @vdropzone-complete="afterComplete2"
               >
               </vue-dropzone>
-            </v-container> -->
+            </v-container>
           </v-row>
           <!-- <v-row>
             <div v-if="images.length > 0">
@@ -246,6 +250,7 @@
         </p>
       </v-snackbar>
     </section>
+    
   </div>
 </template>
 
@@ -289,6 +294,13 @@ export default {
         acceptedFiles: ".jpg, .jpeg, .png",
         dictDefaultMessage: "Arrastra tus archivos aquí",
       },
+      dropzone_options2: {
+        url: "https://httpbin.org/post",
+        addRemoveLinks: false,
+        acceptedFiles: ".jpg, .jpeg, .png",
+        dictDefaultMessage: "Elige la portada de la Trivia",
+        thumbnailWidth: 160
+      },
     };
   },
   mounted() {
@@ -298,7 +310,15 @@ export default {
     
   },
   methods: {
+    showCover(){
+      this.cover_dialog = true
+    },
     sendingEvent(file, xhr, formData) {
+      console.log("file", file);
+      console.log("xhr", xhr);
+      console.log("formData", formData);
+    },
+    sendingEvent2(file, xhr, formData) {
       console.log("file", file);
       console.log("xhr", xhr);
       console.log("formData", formData);
@@ -380,30 +400,30 @@ export default {
         console.log(error);
       }
     },
-    // async afterComplete2(file2) {
-    //   try {
-    //     this.rendered_file2 = file2;
-    //     // const imageName = this.cover_img;
-    //     const metaData = {
-    //       content_type: "image/png",
-    //     };
-    //     // this.question_img = file;
-    //     // ensto en appbar
-    //     const storageRef = firebase.storage().ref();
-    //     // //aqui poner titulo de trivia si empiza como untitled y el numero de la pregunta ol a pregunta
-    //     // // images/{trivia_title/question_img.jpg
-    //     const imageRef = storageRef.child(`${this.title}/${this.title}.png`);
+    async afterComplete2(file2) {
+      try {
+        this.rendered_file2 = file2;
+        // const imageName = this.cover_img;
+        const metaData = {
+          content_type: "image/png",
+        };
+        // this.question_img = file;
+        // ensto en appbar
+        const storageRef = firebase.storage().ref();
+        // //aqui poner titulo de trivia si empiza como untitled y el numero de la pregunta ol a pregunta
+        // // images/{trivia_title/question_img.jpg
+        const imageRef = storageRef.child(`${this.title}/${this.title}.png`);
 
-    //     await imageRef.put(file2, metaData);
+        await imageRef.put(file2, metaData);
 
-    //     this.cover_img = await imageRef.getDownloadURL();
-    //     // this.$refs.imgDropzone.removeFile(file);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    //   await db.collection(this.user)
-    //           .doc(this.title)
-    // },
+        this.cover_img = await imageRef.getDownloadURL();
+        // this.$refs.imgDropzone.removeFile(file);
+      } catch (error) {
+        console.log(error);
+      }
+      await db.collection(this.user)
+              .doc(this.title)
+    },
     addToQueue() {
       this.questions.push({
         question: this.question,

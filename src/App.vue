@@ -106,7 +106,7 @@ export default {
     student: null,
     items: [
        
-        { title: "Trivias", icon: "mdi-gamepad-circle-left", path: "/trivias" },
+        { title: "Trivias", icon: "mdi-gamepad-circle-left", path: "/trivias-viewer" },
         // { title: "Auto-trivia", icon: "mdi-gamepad-circle-left", path: "/trivias" },
         // lvl.1 or 2 a.i. c.i. solo
         {

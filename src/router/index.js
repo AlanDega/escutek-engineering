@@ -3,9 +3,9 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import SignUp from '../views/auth/SignUp.vue'
 import Login from '../views/auth/Login.vue'
-import Trivias from '../views/prof/trivia/Trivias.vue'
-import TriviaDetails from '../views/prof/trivia/TriviaDetails.vue'
-import CreateTrivia from '../views/prof/trivia/CreateTrivia.vue'
+import TriviasViewer from '../views/prof/trivia/TriviasViewer.vue'
+import SingleTriviaViewer from '../views/prof/trivia/SingleTriviaViewer.vue'
+import TriviaCreator from '../views/prof/trivia/TriviaCreator.vue'
 
 Vue.use(VueRouter)
 
@@ -26,19 +26,19 @@ const routes = [
     component: Login
   },
   {
-    path: '/trivias',
-    name: 'trivias',
-    component: Trivias
+    path: '/trivias-viewer',
+    name: 'trivias-viewer',
+    component: TriviasViewer
   },
   {
-    path: '/create-trivia',
-    name: 'create-trivia',
-    component: CreateTrivia
+    path: '/trivia-creator',
+    name: 'trivia-creator',
+    component: TriviaCreator
   },
   {
-    path: '/trivia-details/:id',
-    name: 'trivia-details',
-    component: TriviaDetails
+    path: '/trivia-viewer/:id',
+    name: 'trivia-viewer',
+    component: SingleTriviaViewer
   },
   {
     path: '/about',
