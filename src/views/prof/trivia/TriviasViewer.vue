@@ -10,7 +10,7 @@
         <v-col cols="2"> </v-col>
         <v-col cols="8">
           <v-row justify="center">
-            <v-card height="50" width="500" outlined>
+            <v-card height="50" width="500" outlined class="mb-8">
               <v-row class="fill-height" justify="end" align="center">
                 <v-icon color="deep-purple accent-3" class="mr-4"
                   >mdi-magnify</v-icon
@@ -23,7 +23,7 @@
               </v-container>
             </v-card>
           </v-row>
-          <v-row class="fill-height" >
+          <v-row class="fill-height">
             <v-card class="quiz-card" v-for="(trivia, i) in trivias" :key="i">
               <v-row>
                 <v-col cols="3">
@@ -32,17 +32,74 @@
                 <v-col cols="9">
                   <v-row class="" align="center">
                     <!-- {{trivia.title}} -->
-                    <h2>Title</h2>
-                    <v-spacer></v-spacer>
-                    <v-icon class="mr-6">mdi-magnify</v-icon>
+                    <v-list-item two-line>
+                      <v-list-item-content>
+                        <v-list-item-title>{{
+                          trivia.title
+                        }}</v-list-item-title>
+                        <v-list-item-subtitle>{{
+                          trivia.description
+                        }}</v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
                   </v-row>
-                  <v-row class="fill-height" align="end" > 
-                    <v-icon class="mb-10">mdi-account</v-icon>
+
+                  <v-row class="" align="end">
+                    <v-icon class="mt-8">mdi-account</v-icon>
                     <v-spacer></v-spacer>
-                    <v-btn class="mb-10 mr-6" color="deep-purple accent-3" dark>Juega</v-btn>
+                    <v-dialog v-model="group_dialog">
+                      <template v-slot:extension="{ on }">
+                        <v-btn
+                          v-on="on"
+                          class="mt-8 mr-6"
+                          color="deep-purple accent-3"
+                          dark
+                          >Juega</v-btn
+                        >
+                      </template>
+                      <v-card>
+                        <v-card-title>Elige un grupo</v-card-title>
+                        <v-container fluid class="groups-style">
+                          <v-row>
+                            <v-col cols="4">
+                              <v-card
+                                v-for="(a_group, i) in a_groups"
+                                :key="i"
+                                class="mx-auto"
+                              >
+                                <v-card-text class="mx-auto">
+                                  <h1>{{ a_group }}</h1>
+                                </v-card-text>
+                              </v-card>
+                            </v-col>
+                            <v-col cols="4">
+                              <v-card
+                                v-for="(b_group, i) in b_groups"
+                                :key="i"
+                                class="mx-auto"
+                              >
+                                <v-card-text class="mx-auto">
+                                  <h1>{{ b_group }}</h1>
+                                </v-card-text>
+                              </v-card>
+                            </v-col>
+                            <v-col cols="4">
+                              <v-card
+                                v-for="(c_group, i) in c_groups"
+                                :key="i"
+                                class="mx-auto"
+                              >
+                                <v-card-text class="mx-auto">
+                                  <h1>{{ c_group }}</h1>
+                                </v-card-text>
+                              </v-card>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card>
+                    </v-dialog>
                   </v-row>
                 </v-col>
-
               </v-row>
             </v-card>
           </v-row>
@@ -59,6 +116,10 @@ import { db } from "../../../db";
 export default {
   data() {
     return {
+      group_dialog:false,
+      a_groups: ["A-1", "A-2", "A-3"],
+      b_groups: ["B-1", "B-2", "B-3"],
+      c_groups: ["C-1", "C-2", "C-3"],
       trivias: [],
       user: null,
       question: null,
@@ -101,7 +162,7 @@ export default {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.user = user.email;
-        db.collection(this.user)
+        db.collection("quizzes")
           .get()
           .then((querySnapshot) => {
             const documents = querySnapshot.docs.map((doc) => doc.data());
@@ -112,30 +173,6 @@ export default {
     });
   },
   methods: {
-    // createTrivia() {
-    //   db.collection(this.user)
-    //     .doc(this.question)
-    //     .set({
-    //       question: this.question,
-    //       answer1: this.answer1,
-    //       answer2: this.answer2,
-    //       answer3: this.answer3,
-    //       answer4: this.answer4,
-    //       right_answer: this.right_answer,
-    //       selected: null
-    //     })
-    //     .then(() => {
-    //       console.log("exitoTrivia");
-    //       db.collection(this.user)
-    //         .get()
-    //         .then(querySnapshot => {
-    //           this.dialog = false;
-    //           const documents = querySnapshot.docs.map(doc => doc.data());
-    //           console.log("documents", documents);
-    //           this.trivias = documents;
-    //         });
-    //     });
-    // },
     goToCreateQuiz() {
       this.$router.push("/create-trivia");
     },
@@ -144,10 +181,9 @@ export default {
 </script>
 
 <style>
-.quiz-card{
+.quiz-card {
   height: 160px;
   width: 100%;
-  
 }
 /* This is for documentation purposes and will not be needed in your application */
 #lateral .v-btn--example {

@@ -107,6 +107,9 @@ export default {
     items: [
        
         { title: "Trivias", icon: "mdi-gamepad-circle-left", path: "/trivias-viewer" },
+        { title: "Explora", icon: "mdi-gamepad-circle-left", path: "/trivias-library" },
+        { title: "Grupos", icon: "mdi-gamepad-circle-left", path: "/trivias-library" },
+        // { title: "Horario", icon: "mdi-gamepad-circle-left", path: "/trivias-library" },
         // { title: "Auto-trivia", icon: "mdi-gamepad-circle-left", path: "/trivias" },
         // lvl.1 or 2 a.i. c.i. solo
         {

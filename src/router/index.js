@@ -6,6 +6,7 @@ import Login from '../views/auth/Login.vue'
 import TriviasViewer from '../views/prof/trivia/TriviasViewer.vue'
 import SingleTriviaViewer from '../views/prof/trivia/SingleTriviaViewer.vue'
 import TriviaCreator from '../views/prof/trivia/TriviaCreator.vue'
+import GroupPicker from '../views/prof/trivia/GroupPicker.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,11 @@ const routes = [
     path: '/trivia-viewer/:id',
     name: 'trivia-viewer',
     component: SingleTriviaViewer
+  },
+  {
+    path: '/group-picker',
+    name: 'group-picker',
+    component: GroupPicker
   },
   {
     path: '/about',

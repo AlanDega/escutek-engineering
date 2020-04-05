@@ -3,18 +3,51 @@
     <v-app-bar color="white">
       <v-spacer></v-spacer>
       <v-row class="fill-height" justify="center" align="center">
-        <template v-slot:activator="{on}">
-        </template>
-        <v-text-field
-        append-icon="mdi-image-area"
-        @click:append="showCover"
-          class="mt-2"
-          color="deep-purple accent-3"
-          v-model="title"
-          dense
-          label="Título de la trivia"
-          outlined
-        ></v-text-field>
+        <v-dialog v-model="cover_dialog" width="700" height="800" >
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              append-icon="mdi-image-area"
+              @click:append="showCover"
+              class="mt-2"
+              color="deep-purple accent-3"
+              v-model="title"
+              v-on="on"
+              dense
+              label="Título de la trivia"
+              outlined
+            ></v-text-field>
+          </template>
+          <v-card>
+            <v-card-title>
+              <v-row justify="center">
+                <v-text-field
+                  label="Título de la trivia"
+                  v-model="title"
+                  color="deep-purple accent-3"
+                ></v-text-field>
+              </v-row>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-textarea color="deep-purple accent-3" v-model="description" outlined label="Escribe aquí la descripción"></v-textarea>
+                </v-row>
+                <v-row>
+ <vue-dropzone
+                  id="dropzone2"
+                  class="zone2"
+                  ref="imgDropzone2"
+                  :options="dropzone_options2"
+                  v-on:vdropzone-sending="sendingEvent2"
+                  @vdropzone-complete="afterComplete2"
+                >
+                </vue-dropzone>
+                </v-row>
+               
+              </v-container>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
       </v-row>
 
       <v-spacer></v-spacer>
@@ -221,17 +254,6 @@
                 >
               </v-row>
             </v-container>
-            <v-container>
-                <vue-dropzone
-                id="dropzone2"
-                class="zone2"
-                ref="imgDropzone2"
-                :options="dropzone_options2"
-                v-on:vdropzone-sending="sendingEvent2"
-                @vdropzone-complete="afterComplete2"
-              >
-              </vue-dropzone>
-            </v-container>
           </v-row>
           <!-- <v-row>
             <div v-if="images.length > 0">
@@ -250,7 +272,6 @@
         </p>
       </v-snackbar>
     </section>
-    
   </div>
 </template>
 
@@ -266,7 +287,9 @@ export default {
   },
   data() {
     return {
-      cover_img:'',
+      description:'',
+      cover_dialog: false,
+      cover_img: "",
       quiz: null,
       rendered_file: null,
       rendered_file2: null,
@@ -299,19 +322,17 @@ export default {
         addRemoveLinks: false,
         acceptedFiles: ".jpg, .jpeg, .png",
         dictDefaultMessage: "Elige la portada de la Trivia",
-        thumbnailWidth: 160
       },
     };
   },
   mounted() {
     firebase.auth().onAuthStateChanged((user) => {
-      this.user = user.email
-    })
-    
+      this.user = user.email;
+    });
   },
   methods: {
-    showCover(){
-      this.cover_dialog = true
+    showCover() {
+      this.cover_dialog = true;
     },
     sendingEvent(file, xhr, formData) {
       console.log("file", file);
@@ -324,26 +345,34 @@ export default {
       console.log("formData", formData);
     },
     quizSender() {
-     
-      this.questions.map((question) => {
-        db.collection(this.user)
-          .doc(this.title)
-          .add({
-            title: this.title,
-            answer1: question.answer1,
-            answer2: question.answer2,
-            answer3: question.answer3,
-            answer4: question.answer4,
-            right_answer: question.right_answer,
-            question_img: question.question_img,
-            question: question.question,
-            time_limit: question.time_limit,
-            xp_reward: question.xp_reward,
+      db.collection('quizzes')
+        .doc(this.title)
+        .set({
+          title: this.title,
+          cover_img: this.cover_img,
+          description: this.description
+        }).then(() => {
+           this.questions.map((question) => {
+              db.collection(this.user)
+              .add({
+                title: this.title,
+                cover_img:this.cover_img,
+                description:this.description,
+                answer1: question.answer1,
+                answer2: question.answer2,
+                answer3: question.answer3,
+                answer4: question.answer4,
+                right_answer: question.right_answer,
+                question_img: question.question_img,
+                question: question.question,
+                time_limit: question.time_limit,
+                xp_reward: question.xp_reward,
+              })                  
           })
-      }).then(() => {
-            console.log("quiz sent");
-            this.$router.push("/trivias");
-          });
+           console.log("quiz sent");
+              this.$router.push("/trivias-viewer");
+        })
+          
     },
     select1() {
       if (this.answer1) {
@@ -421,8 +450,6 @@ export default {
       } catch (error) {
         console.log(error);
       }
-      await db.collection(this.user)
-              .doc(this.title)
     },
     addToQueue() {
       this.questions.push({
@@ -515,6 +542,9 @@ img {
 }
 .zone {
   width: 80%;
+}
+.zone2 {
+  width: 100%;
 }
 // argrear timeout de que refrezce parsa quporque tivu una falla con el internet
 </style>
