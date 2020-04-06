@@ -57,7 +57,7 @@ export default {
 
   watch:{
       A_1_trivia(){
-         if(this.A_1_trivia.active === true){
+         if(this.A_1_trivia[0].active === true){
              this.active = true
          } else {
              this.active = false
@@ -65,6 +65,7 @@ export default {
       }
   },
   mounted() {
+    // db.collection()
     // db.collection("prof1@gmail.com-trivia-groups")
     //   .doc(this.$route.params.id)
     //   .get()

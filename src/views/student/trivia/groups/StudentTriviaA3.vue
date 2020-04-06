@@ -57,7 +57,7 @@ export default {
 
   watch:{
       A_3_trivia(){
-         if(this.A_3_trivia.active === true){
+         if(this.A_3_trivia[0].active === true){
              this.active = true
          } else {
              this.active = false
