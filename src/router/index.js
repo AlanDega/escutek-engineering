@@ -6,6 +6,10 @@ import Login from '../views/auth/Login.vue'
 import TriviasViewer from '../views/prof/trivia/TriviasViewer.vue'
 import SingleTriviaViewer from '../views/prof/trivia/SingleTriviaViewer.vue'
 import TriviaCreator from '../views/prof/trivia/TriviaCreator.vue'
+import ProfTrivia from '../views/prof/trivia/ProfTrivia.vue'
+import StudentTriviaA1 from '../views/student/trivia/groups/StudentTriviaA1.vue'
+import StudentTriviaA2 from '../views/student/trivia/groups/StudentTriviaA2.vue'
+import StudentTriviaA3 from '../views/student/trivia/groups/StudentTriviaA3.vue'
 import GroupPicker from '../views/prof/trivia/GroupPicker.vue'
 
 Vue.use(VueRouter)
@@ -30,6 +34,26 @@ const routes = [
     path: '/trivias-viewer',
     name: 'trivias-viewer',
     component: TriviasViewer
+  },
+  {
+    path: '/prof-trivia/:id',
+    name: 'prof-trivia',
+    component: ProfTrivia
+  },
+  {
+    path: '/student-trivia-A-1',
+    name: 'student-trivia-A-1',
+    component: StudentTriviaA1
+  },
+  {
+    path: '/student-trivia-A-2',
+    name: 'student-trivia-A-2',
+    component: StudentTriviaA2
+  },
+  {
+    path: '/student-trivia-A-3',
+    name: 'student-trivia-A-3',
+    component: StudentTriviaA3
   },
   {
     path: '/trivia-creator',

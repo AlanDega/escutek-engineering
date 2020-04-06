@@ -47,10 +47,11 @@
                   <v-row class="" align="end">
                     <v-icon class="mt-8">mdi-account</v-icon>
                     <v-spacer></v-spacer>
-                    <v-dialog v-model="group_dialog">
-                      <template v-slot:extension="{ on }">
+                    <v-dialog v-model="group_dialog" width="500">
+                      <template v-slot:activator="{ on }">
                         <v-btn
                           v-on="on"
+                          @click="getTrivia(trivia)"
                           class="mt-8 mr-6"
                           color="deep-purple accent-3"
                           dark
@@ -64,8 +65,9 @@
                             <v-col cols="4">
                               <v-card
                                 v-for="(a_group, i) in a_groups"
+                                @click="setTrivia(a_group)"
                                 :key="i"
-                                class="mx-auto"
+                                class="mx-auto mt-4"
                               >
                                 <v-card-text class="mx-auto">
                                   <h1>{{ a_group }}</h1>
@@ -76,7 +78,7 @@
                               <v-card
                                 v-for="(b_group, i) in b_groups"
                                 :key="i"
-                                class="mx-auto"
+                                class="mx-auto mt-4"
                               >
                                 <v-card-text class="mx-auto">
                                   <h1>{{ b_group }}</h1>
@@ -87,7 +89,7 @@
                               <v-card
                                 v-for="(c_group, i) in c_groups"
                                 :key="i"
-                                class="mx-auto"
+                                class="mx-auto mt-4"
                               >
                                 <v-card-text class="mx-auto">
                                   <h1>{{ c_group }}</h1>
@@ -116,6 +118,7 @@ import { db } from "../../../db";
 export default {
   data() {
     return {
+      selected_trivia:'',
       group_dialog:false,
       a_groups: ["A-1", "A-2", "A-3"],
       b_groups: ["B-1", "B-2", "B-3"],
@@ -137,8 +140,7 @@ export default {
       student_tokens: 0,
       dialog: false,
       fab: false,
-      hidden: false,
-      tabs: null,
+      
     };
   },
   computed: {
@@ -173,6 +175,19 @@ export default {
     });
   },
   methods: {
+    // con el title de la trivia puede traer la demas info ya que esten en la vista
+    getTrivia(trivia){
+      this.selected_trivia = trivia.title
+    },
+    setTrivia(group){
+      db.collection(this.user + '-trivia-groups')
+        .doc(group)
+        .set({
+          group_trivia:this.selected_trivia
+        }).then(() => {
+          this.$router.push({ name:'trivia', params: { id:this.selected_trivia } })
+        })
+    },
     goToCreateQuiz() {
       this.$router.push("/create-trivia");
     },

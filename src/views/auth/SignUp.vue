@@ -2,6 +2,11 @@
   <v-container>
     <h2>Registrate</h2>
     <v-text-field label="Alias" v-model="alias"></v-text-field>
+    <v-select
+      v-model="selected_group"
+      label="Grupos"
+      :items="groups"
+    ></v-select>
     <v-text-field label="Email" v-model="email"></v-text-field>
     <v-text-field label="Contraseña" v-model="password"></v-text-field>
     <v-text-field
@@ -20,6 +25,8 @@ import { db } from "../../db";
 export default {
   data() {
     return {
+      selected_group:'',
+      groups:['A-1','A-2','A-3'],
       email: null,
       password: null,
       confirmed_password: null,
@@ -32,15 +39,29 @@ export default {
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(() => {
-          db.collection("usuarios")
+          db.collection("users")
             .doc(this.email)
             .set({
               alias: this.alias,
               email: this.email,
-              password: this.email
+              password: this.email,
+              user_type: 'student',
+              group: this.selected_group
             });
-          this.$router.push("/login");
-        });
+          this.$router.push("/login")
+          .then(() => {
+            db.collection(this.selected_group + '-students')
+              .doc(this.alias)
+              .set({
+                alias: this.alias,
+                email: this.email,
+                xp:0,
+                group: this.selected_group,
+                trivia_xp:0,
+                question_xp:0
+              })
+          })
+        })
     }
   }
 };

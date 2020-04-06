@@ -39,6 +39,7 @@
     <div v-if="this.$route.name != 'sign-up'">
       <div v-if="this.$route.name != 'login'">
         <v-navigation-drawer
+        width="220"
           app
           permanent
           dark
@@ -100,6 +101,7 @@ export default {
   components: {},
 
   data: () => ({
+    group:'',
     user_type: null,
     user_email: "",
     prof: null,
@@ -133,6 +135,11 @@ export default {
      items2: [
        
        
+       {
+         title: "Trivia",
+          icon: "mdi-gamepad-square-outline",
+          path: "student-trivia"
+        },
        {
          title: "Juegos",
           icon: "mdi-gamepad-square-outline",
@@ -172,6 +179,7 @@ export default {
               this.student = true;
               this.director = false;
               this.prof = false;
+              this.group = document.group
             } 
           });
       }
@@ -179,7 +187,12 @@ export default {
    },
    methods: {
      goToComponent(item) {
-      this.$router.push(item.path);
+       if(item.path === 'student-trivia'){
+         this.$router.push('/student-trivia-'+ this.group)
+       } else {
+               this.$router.push(item.path);
+
+       }
     },
    },
   
