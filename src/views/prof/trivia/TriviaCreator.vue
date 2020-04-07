@@ -353,9 +353,10 @@ export default {
           description: this.description
         }).then(() => {
            this.questions.map((question) => {
-              db.collection(this.user)
-              .add({
-                title: this.title,
+              db.collection('questions')
+              .doc(question.question)
+              .set({
+                trivia: this.title,
                 cover_img:this.cover_img,
                 description:this.description,
                 answer1: question.answer1,

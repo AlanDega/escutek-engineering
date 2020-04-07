@@ -65,6 +65,7 @@ export default {
       }
   },
   mounted() {
+    this.right_answer = this.A_3_trivia[0].right_answer
       console.log('trivias',this.trivias)
     // db.collection("prof1@gmail.com-trivia-groups")
     //   .doc(this.$route.params.id)
@@ -114,7 +115,11 @@ export default {
   },
  
   methods: {
-    checkAnswer1() {}
+    checkAnswer1() {
+      if(this.answer === this.right_answer){
+        console.log('acertaste')
+      }
+    }
   }
 };
 </script>

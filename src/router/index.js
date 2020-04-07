@@ -6,7 +6,9 @@ import Login from '../views/auth/Login.vue'
 import TriviasViewer from '../views/prof/trivia/TriviasViewer.vue'
 import SingleTriviaViewer from '../views/prof/trivia/SingleTriviaViewer.vue'
 import TriviaCreator from '../views/prof/trivia/TriviaCreator.vue'
-import ProfTrivia from '../views/prof/trivia/ProfTrivia.vue'
+import ProfTriviaA1 from '../views/prof/trivia/groups/ProfTriviaA1.vue'
+import ProfTriviaA2 from '../views/prof/trivia/groups/ProfTriviaA2.vue'
+import ProfTriviaA3 from '../views/prof/trivia/groups/ProfTriviaA3.vue'
 import StudentTriviaA1 from '../views/student/trivia/groups/StudentTriviaA1.vue'
 import StudentTriviaA2 from '../views/student/trivia/groups/StudentTriviaA2.vue'
 import StudentTriviaA3 from '../views/student/trivia/groups/StudentTriviaA3.vue'
@@ -36,23 +38,33 @@ const routes = [
     component: TriviasViewer
   },
   {
-    path: '/prof-trivia/:id',
-    name: 'prof-trivia',
-    component: ProfTrivia
+    path: '/prof-trivia-A1',
+    name: 'prof-trivia-A1',
+    component: ProfTriviaA1
   },
   {
-    path: '/student-trivia-A-1',
-    name: 'student-trivia-A-1',
+    path: '/prof-trivia-A2',
+    name: 'prof-trivia-A2',
+    component: ProfTriviaA2
+  },
+  {
+    path: '/prof-trivia-A3',
+    name: 'prof-trivia-A3',
+    component: ProfTriviaA3
+  },
+  {
+    path: '/student-trivia-A1',
+    name: 'student-trivia-A1',
     component: StudentTriviaA1
   },
   {
-    path: '/student-trivia-A-2',
-    name: 'student-trivia-A-2',
+    path: '/student-trivia-A2',
+    name: 'student-trivia-A2',
     component: StudentTriviaA2
   },
   {
-    path: '/student-trivia-A-3',
-    name: 'student-trivia-A-3',
+    path: '/student-trivia-A3',
+    name: 'student-trivia-A3',
     component: StudentTriviaA3
   },
   {

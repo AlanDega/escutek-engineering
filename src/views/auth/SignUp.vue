@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       selected_group:'',
-      groups:['A-1','A-2','A-3'],
+      groups:['A1','A2','A3'],
       email: null,
       password: null,
       confirmed_password: null,
@@ -51,14 +51,22 @@ export default {
           this.$router.push("/login")
           .then(() => {
             db.collection(this.selected_group + '-students')
-              .doc(this.alias)
+              .doc(this.email)
               .set({
                 alias: this.alias,
+                answered: false,
                 email: this.email,
-                xp:0,
                 group: this.selected_group,
                 trivia_xp:0,
-                question_xp:0
+                question_xp:0,
+                place:0,
+                present:null,
+                question_xp:0,
+                response_time:0,
+                right:null,
+                wrong:null,
+                xp:0,
+
               })
           })
         })
