@@ -2,16 +2,18 @@
   <div>
     <v-app-bar>
       <v-spacer></v-spacer>
-      <h1 v-if="in_question">{{question}}</h1>
+      <h1 v-if="in_question">{{ question }}</h1>
       <!-- <h1 v-if="lobby"></h1> -->
       <v-spacer></v-spacer>
     </v-app-bar>
     <div v-if="in_lobby">
-        <v-row class="fill-height" align="center" justify="space-around">
-          <h1>Jugadores{{present_students.length}}</h1>
-          <h1>{{group_trivia}}</h1>
-          <v-btn color="deep-purple accent-3" dark>Empezar</v-btn>
-        </v-row>
+      <v-row class="fill-height" align="center" justify="space-around">
+        <h1>Jugadores{{ present_students.length }}</h1>
+        <h1>{{ group_trivia }}</h1>
+        <v-btn @click="initializeTrivia" color="deep-purple accent-3" dark
+          >Empezar</v-btn
+        >
+      </v-row>
     </div>
     <div v-if="in_question">
       <v-container class="fill-height">
@@ -24,9 +26,7 @@
           <v-col cols="6">
             <v-img :src="question_img" class="question-img"></v-img>
           </v-col>
-          <v-col cols="3">
-            
-          </v-col>
+          <v-col cols="3"> </v-col>
         </v-row>
         <v-row>
           <v-col cols="6">
@@ -36,7 +36,7 @@
               </v-col>
               <v-col cols="10">
                 <v-row class="fill-height" justify="center" align="center">
-                  <p>{{answer1}}</p>
+                  <p>{{ answer1 }}</p>
                 </v-row>
               </v-col>
             </v-row>
@@ -48,7 +48,7 @@
               </v-col>
               <v-col cols="10">
                 <v-row class="fill-height" justify="center" align="center">
-                  <p>{{answer2}}</p>
+                  <p>{{ answer2 }}</p>
                 </v-row>
               </v-col>
             </v-row>
@@ -62,7 +62,7 @@
               </v-col>
               <v-col cols="10">
                 <v-row class="fill-height" justify="center" align="center">
-                  <p>{{answer3}}</p>
+                  <p>{{ answer3 }}</p>
                 </v-row>
               </v-col>
             </v-row>
@@ -74,7 +74,7 @@
               </v-col>
               <v-col cols="10">
                 <v-row class="fill-height" justify="center" align="center">
-                  <p>{{answer4}}</p>
+                  <p>{{ answer4 }}</p>
                 </v-row>
               </v-col>
             </v-row>
@@ -90,17 +90,22 @@
         </v-row>
       </v-container>
     </div>
-    <div v-if="result">
+    <div v-if="in_question_result">
       <v-container class="graph">
         <v-row>
           <v-col cols="3"></v-col>
           <v-col cols="6">
-            <v-row class="fill-height" justify="center" align="end" id="grid-graphs">
+            <v-row
+              class="fill-height"
+              justify="center"
+              align="end"
+              id="grid-graphs"
+            >
               <div v-for="(chart, i) in charts" :key="i">
                 <v-card width="50" :height="chart.place" :color="chart.color">
-                    <p>
-                        {{}}
-                    </p>
+                  <p>
+                    {{}}
+                  </p>
                 </v-card>
               </div>
             </v-row>
@@ -113,43 +118,103 @@
                 </v-card>
               </div>
             </v-row>
+            <v-row>
+              <v-col cols="6">
+                <v-card class="result-card1">
+                  <v-container>
+                    <v-row
+                      class="fill-height"
+                      justify="space-between"
+                      align="center"
+                    >
+                      <h3>{{ answer1 }}</h3>
+                      <v-icon v-if="(right_answer === answer1)" color="white"
+                        >mdi-check-outline</v-icon
+                      >
+                    </v-row>
+                  </v-container>
+                </v-card>
+                <v-card class="result-card3">
+                  <v-container>
+                    <v-row
+                      class="fill-height"
+                      justify="space-between"
+                      align="center"
+                    >
+                      <h3>{{ answer3 }}</h3>
+                      <v-icon v-if="(right_answer === answer3)" color="white"
+                        >mdi-check-outline</v-icon
+                      >
+                    </v-row>
+                  </v-container>
+                </v-card>
+              </v-col>
+              <v-col cols="6">
+                <v-card class="result-card2">
+                  <v-container>
+                    <v-row
+                      class="fill-height"
+                      justify="space-between"
+                      align="center"
+                    >
+                      <h3>{{ answer2 }}</h3>
+                      <v-icon v-if="(right_answer === answer2)" color="white"
+                        >mdi-check-outline</v-icon
+                      >
+                    </v-row>
+                  </v-container>
+                </v-card>
+                <v-card class="result-card4">
+                  <v-container>
+                    <v-row
+                      class="fill-height"
+                      justify="space-between"
+                      align="center"
+                    >
+                      <h3>{{ answer4 }}</h3>
+                      <v-icon v-if="(right_answer === answer4)" color="white"
+                        >mdi-check-outline</v-icon
+                      >
+                    </v-row>
+                  </v-container>
+                </v-card>
+              </v-col>
+            </v-row>
           </v-col>
           <v-col cols="3">
             <v-row align="start" justify="end">
-              <v-btn @click="showLeaderboard" dark color="deep-purple accent-3">Siguiente</v-btn>
+              <v-btn @click="showLeaderboard" dark color="deep-purple accent-3"
+                >Siguiente</v-btn
+              >
             </v-row>
           </v-col>
         </v-row>
         <v-row>
-            <v-col>
-                
-            </v-col>
+          <v-col> </v-col>
         </v-row>
       </v-container>
     </div>
-    <div v-if="leaderboard" >
+    <div v-if="leaderboard">
       <v-container class="graph">
         <v-row class="fill-height" justify="center" align="center">
-            <v-card color="black" height="400" width="800">
-              <v-list>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      <v-row v-for="(student, i) in top10" :key="i">
-                        <v-col cols="6">
-                          <!-- {{student.alias}} -->
-                        </v-col>
-                        <v-col>
-                          <!-- {{student.trivia_xp}} -->
-                        </v-col>
-                      </v-row>
-                      
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-
-              </v-list>
-            </v-card>
+          <v-card color="black" height="400" width="800">
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <v-row v-for="(student, i) in top10" :key="i">
+                      <v-col cols="6">
+                        <!-- {{student.alias}} -->
+                      </v-col>
+                      <v-col>
+                        <!-- {{student.trivia_xp}} -->
+                      </v-col>
+                    </v-row>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-card>
         </v-row>
       </v-container>
     </div>
@@ -165,111 +230,174 @@ export default {
       cards: [
         {
           color: "green",
-          icon: "mdi-triangle"
+          icon: "mdi-triangle",
         },
         {
           color: "blue",
-          icon: "mdi-circle"
+          icon: "mdi-circle",
         },
         {
           color: "yellow",
-          icon: "mdi-square"
+          icon: "mdi-square",
         },
         {
           color: "red",
-          icon: "mdi-rhombus"
-        }
+          icon: "mdi-rhombus",
+        },
       ],
       charts: [
         {
           color: "green",
-          place: 100,
-          times_choosed: 10
+          place: 0,
+          times_choosed: 0,
         },
         {
           color: "blue",
-          place: 30,
-          times_choosed: 3
+          place: 0,
+          times_choosed: 0,
         },
         {
           color: "yellow",
-          place: 50,
-          times_choosed: 5
+          place: 0,
+          times_choosed: 0,
         },
         {
           color: "red",
-          place: 70,
-          times_choosed: 7
-        }
+          place: 0,
+          times_choosed: 0,
+        },
       ],
 
       questions: [],
       user: "",
       in_question: null,
+      in_question_result: null,
       in_lobby: null,
       result: false,
       actual_question: 0,
-      A1trivia:[],
-      active:null,
-      trivia_status:[],
-      answer1:'',
-      answer2:'',
-      answer3:'',
-      answer4:'',
-      question_img:'',
-      leaderboard:false,
-      top10:[],
-      students:[],
-      present_students:[],
-      group_trivia:'',
-      cover_img:''
+      A1trivia: [],
+      active: null,
+      trivia_status: [],
+      answer1: "",
+      answer2: "",
+      answer3: "",
+      answer4: "",
+      right_answer:'',
+      question_img: "",
+      leaderboard: false,
+      top10: [],
+      students: [],
+      present_students: [],
+      group_trivia: "",
+      cover_img: "",
+      answered_students: [],
+      correct_answers: 0,
+      answers1: 0,
     };
   },
-   firestore: {
-    A1trivia: db.collection('A1-trivia'),
-    trivia_status: db.collection('prof1@gmail.com-trivia-groups'),
-    students: db.collection('A-1-students')
+  firestore: {
+    A1trivia: db.collection("A1-trivia"),
+    trivia_status: db.collection("prof1@gmail.com-trivia-groups"),
+    students: db.collection("A1-students"),
   },
-  watch:{
+  watch: {
     // este es como un created o mounted en realtime
-      students(){
-        console.log('students',this.students)
-        this.students.map(student => {
-          if(student.present === true){
-            this.present_students.push(student.alias)
-          }
-        })
-      },
-      A1trivia(){
-        // posiblemente tenga que actualizar aqui actual questio nantes de padaral a trivia status
-      },
-      trivia_status(){
-        if(this.trivia_status[0].in_lobby === true){
-          console.log('true')
-          // this.in_question = false
-          this.in_lobby = true 
-          
-        } else {
-          this.in_lobby = false
+    students() {
+      console.log("students", this.students);
+      this.students.map((student) => {
+        if (student.present === true) {
+          this.present_students.push(student.alias);
         }
-        if(this.trivia_status[0].active === true) {
-          this.active = true
-        } else {
-          this.active = false
-        }
-        this.actual_question = this.trivia_status[0].question_index
-        this.question = this.A1trivia[this.actual_question].question
-        this.question_img = this.A1trivia[this.actual_question].question_img
-        this.answer1 = this.A1trivia[this.actual_question].answer1
-        this.answer2 = this.A1trivia[this.actual_question].answer2
-        this.answer3 = this.A1trivia[this.actual_question].answer3
-        this.answer4 = this.A1trivia[this.actual_question].answer4
-        this.right_answer = this.A1trivia[this.actual_question].right_answer
-        this.in_question = this.trivia_status[0].in_question
-        this.group_trivia= this.trivia_status[0].group_trivia
-        this.cover_img= this.trivia_status[0].trivia_cover
+        if (student.answered === true) {
+          this.answered_students.push(student.alias);
+          if (this.answered_students.length === this.students.length) {
+            db.collection("prof1@gmail.com-trivia-groups")
+              .doc("A1")
+              .update({ in_question_result: true, in_question: false })
+              .then(() => {
+                db.collection("A1-students")
+                  .where("answer", "==", this.answer1)
+                  .get()
+                  .then((querySnapshot) => {
+                    const documents = querySnapshot.docs.map((doc) =>
+                      doc.data()
+                    );
+                    this.answers1 = documents.length;
+                    this.charts[0].place = this.answers1 * 10;
+                    console.log("answers1", this.answers1);
+                  });
+                db.collection("A1-students")
+                  .where("answer", "==", this.answer2)
+                  .get()
+                  .then((querySnapshot) => {
+                    const documents = querySnapshot.docs.map((doc) =>
+                      doc.data()
+                    );
+                    this.answers2 = documents.length;
+                    this.charts[1].place = this.answers2 * 10;
+                    console.log("answers1", this.answers2);
+                  });
+                db.collection("A1-students")
+                  .where("answer", "==", this.answer3)
+                  .get()
+                  .then((querySnapshot) => {
+                    const documents = querySnapshot.docs.map((doc) =>
+                      doc.data()
+                    );
+                    this.answers3 = documents.length;
+                    this.charts[2].place = this.answers3 * 10;
+                    console.log("answers3", this.answers3);
+                  });
+                db.collection("A1-students")
+                  .where("answer", "==", this.answer4)
+                  .get()
+                  .then((querySnapshot) => {
+                    const documents = querySnapshot.docs.map((doc) =>
+                      doc.data()
+                    );
+                    this.answers4 = documents.length;
+                    this.charts[3].place = this.answers4 * 10;
+                    console.log("answers1", this.answers4);
+                  });
 
+                console.log("estado actualizado");
+              });
+          }
+        }
+      });
+    },
+    A1trivia() {
+      // posiblemente tenga que actualizar aqui actual questio nantes de padaral a trivia status
+    },
+    trivia_status() {
+      if (this.trivia_status[0].in_question_result === true) {
+        this.in_question = false;
+        this.in_question_result = true;
       }
+      if (this.trivia_status[0].in_lobby === true) {
+        console.log("true");
+        // this.in_question = false
+        this.in_lobby = true;
+      } else {
+        this.in_lobby = false;
+      }
+      if (this.trivia_status[0].active === true) {
+        this.active = true;
+      } else {
+        this.active = false;
+      }
+      this.actual_question = this.trivia_status[0].question_index;
+      this.question = this.A1trivia[this.actual_question].question;
+      this.question_img = this.A1trivia[this.actual_question].question_img;
+      this.answer1 = this.A1trivia[this.actual_question].answer1;
+      this.answer2 = this.A1trivia[this.actual_question].answer2;
+      this.answer3 = this.A1trivia[this.actual_question].answer3;
+      this.answer4 = this.A1trivia[this.actual_question].answer4;
+      this.right_answer = this.A1trivia[this.actual_question].right_answer;
+      this.in_question = this.trivia_status[0].in_question;
+      this.group_trivia = this.trivia_status[0].group_trivia;
+      this.cover_img = this.trivia_status[0].trivia_cover;
+    },
   },
   mounted() {
     // db.collection(this.A_1_trivia[0].title)
@@ -279,12 +407,9 @@ export default {
     //     console.log('questions-docs',documents)
     //     // despues de este array vamos aunmnetado el index en next question
     //   })
-
-    
     // aqui traemos todas las preguntas
     // firebase.auth().onAuthStateChanged(user => {
     //   this.user = user.email;
-
     //   db.collection('A_1_trivia')
     //     .doc('trivia')
     //     .get()
@@ -293,19 +418,48 @@ export default {
     //       console.log('doc',document)
     //     })
     // });
-
     //if place 1 100%
   },
   methods: {
+    initializeTrivia() {
+      db.collection("prof1@gmail.com-trivia-groups")
+        .doc("A1")
+        .update({ in_lobby: false, active: true, in_question: true })
+        .then(() => console.log("trivia init"));
+    },
     showLeaderboard() {
-      db.collection()
+      db.collection();
       this.actual_index++;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+.result-card1 {
+  height: 150px;
+  width: 100%;
+  background: green;
+  color: white;
+}
+.result-card2 {
+  height: 150px;
+  width: 100%;
+  background: yellow;
+  color: white;
+}
+.result-card3 {
+  height: 150px;
+  width: 100%;
+  background: blue;
+  color: white;
+}
+.result-card4 {
+  height: 150px;
+  width: 100%;
+  background: red;
+  color: white;
+}
 #grid-graphs {
   height: 100%;
 }
@@ -352,7 +506,8 @@ export default {
 }
 </style>
 
-// // el prof les puede decir que se metan al numero x y tutlo lpueden encontrar en explorar
+// // el prof les puede decir que se metan al numero x y tutlo lpueden encontrar
+en explorar
 <!-- <v-container class="xp-graph">
         <v-row class="fill-height" justify="center" align="center">
           <v-img class="lvl-asset" contain src="../../../assets/level.svg"></v-img>

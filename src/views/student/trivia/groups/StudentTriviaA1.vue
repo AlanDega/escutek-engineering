@@ -16,34 +16,35 @@
     <div v-if="in_lobby_loading">
       <h1>cargando...</h1>
     </div>
-    <v-app-bar v-if="active">
+    <v-app-bar v-if="in_question">
       <v-spacer></v-spacer>
       <!-- <h1>{{this.user_alias + '-' + this.battle_xp}}</h1> -->
     </v-app-bar>
     <v-container class="main-container">
-      <div v-if="active">
+      <div v-if="in_question">
         <v-row class="row-1">
           <v-col @click="checkAnswer1" cols="6" id="green-btn">
             <v-row class="fill-height" justify="center" align="center">
               <v-icon color="white">mdi-triangle</v-icon>
-              <h1>{{A_1_trivia[0].a}}</h1>
+              <!-- <h1>{{A_1_trivia[0].a}}</h1> -->
             </v-row>
           </v-col>
-          <v-col cols="6" id="yellow-btn"></v-col>
+          <v-col @click="checkAnswer2" cols="6" id="yellow-btn">
+            
+          </v-col>
         </v-row>
         <v-row class="row-2">
           <v-col class cols="6" id="blue-btn"></v-col>
           <v-col cols="6" id="red-btn"></v-col>
         </v-row>
       </div>
-      <!-- <div v-if="!active">
-        <v-row class="fill-height" justify="center" align="center">
-          <v-col>
-            <h1>La Trivia está por empezar</h1>
-           
-          </v-col>
-        </v-row>
-      </div>-->
+      <div v-if="in_answer_loading">
+        <h1>... cargando tu respuesta</h1>
+      </div>
+      <div v-if="in_question_result">
+        <v-card  height="100" width="100" color="green"></v-card>
+        <v-card height="100" width="100" color="red"></v-card>
+      </div>
     </v-container>
   </div>
 </template>
@@ -54,7 +55,8 @@ import { db } from "../../../../db";
 export default {
   data() {
     return {
-      active: null,
+      in_question: null,
+      in_question_result:null,
       questions: [],
       right_answer: null,
       trivia_xp: 0,
@@ -65,8 +67,12 @@ export default {
       trivia_states: [],
       student_states: [],
       answer1: null,
-      in_lobby: null,
-      in_lobby_loading: null,
+      answer2: null,
+      answer3: null,
+      answer4: null,
+      in_lobby: false,
+      in_lobby_loading: false,
+      in_answer_loading:false,
       trivia_cover: "",
       user: ""
     };
@@ -74,30 +80,48 @@ export default {
   //simepre tratr de traer la info a la primer linea
   firestore: {
     trivia_states: db.collection("prof1@gmail.com-trivia-groups"),
-    student_states: db.collection("A1-students")
+    student_states: db.collection("A1-students"),
+    questions: db.collection("A1-trivia")
   },
 
   watch: {
     trivia_states() {
+
       if (this.trivia_states[0].in_lobby) {
         // this.in_lobby = true;
         this.group_trivia = this.trivia_states[0].group_trivia;
         this.trivia_cover = this.trivia_states[0].trivia_cover;
       } else {
-        this.in_lobby = false;
+        this.in_lobby = false
+        this.in_lobby_loading = false
       }
-      if (this.trivia_states[0].active === true) {
-        this.active = true;
+      if (this.trivia_states[0].in_question === true) {
+        this.in_question = true;
       } else {
-        this.active = false;
+        this.in_question = false;
       }
+      // if(this.trivia_states[0].in_question_result === true) {
+      //   this.in_answer_loading = false
+      //   this.in_question_result = true
+      // } else {
+      //   this.in_question_result = false
+      // }
     },
     student_states() {
       this.student_states.map(student => {
         if (student.email === this.user) {
-          if(student.in_lobby_loading === true)
-          this.in_lobby_loading = true
-          this.in_lobby = false
+          this.trivia_xp = student.trivia_xp
+          if(student.in_answer_loading === true){
+            this.in_answer_loading = true
+            this.in_question = false
+          }
+           if(this.trivia_states[0].in_question_result === true) {
+        this.in_answer_loading = false
+        this.in_question_result = true
+      } else {
+        this.in_question_result = false
+      }
+        
           console.log("si", student);
         } else {
           console.log("no", student);
@@ -121,68 +145,55 @@ export default {
           this.in_lobby = false
         }
       })
-    // db.collection()
-    // db.collection("prof1@gmail.com-trivia-groups")
-    //   .doc(this.$route.params.id)
-    //   .get()
-    //   .then(snapshot => {
-    //     const document = snapshot.data();
-    //     if (document.active === true) {
-    //       this.active = true;
-    //       db.collection("prof1@gmail.com")
-    //         .where("title", "==", document.group_trivia)
-    //         .get()
-    //         .then(querySnapshot => {
-    //           const documents = querySnapshot.docs.map(doc => doc.data());
-    //           console.log("docs", documents);
-    //           this.questions = documents;
-    //   let ref = db.collection("prof1@gmail.com-trivia-groups");
-    //   ref.onSnapshot(snapshot => {
-    //     snapshot.docChanges().forEach(change => {
-    //       if ((change.type = "modified")) {
-    //         let doc = change.doc;
-    //         console.log("doc-change", doc.data().active);
-    //         if(doc.data().active === true)
-    //         this.changes.push({
-    //           id: doc.id,
-    //           active: doc.data().active
-    //         })
-    //       }
-    //     });
-    //   });
-    // })
-    // .then(() => {
-    //   const lastChange = this.changes.length - 1;
-    //   // last active_change, last xp_change etc.
-    //   if (this.changes[lastChange] === true) {
-    //     console.log("last change_active is true");
-    //     this.active = true;
-    //   } else {
-    //     console.log("last change active is false");
-    //     this.active = false;
-    //   }
-    // });
-    // }
-    // console.log("doc", document);
-    //   });
   },
 
   methods: {
     sendPresence() {
       db.collection("A1-students")
         .doc(this.user)
-        .update({ present: true, in_lobby_loading: true })
+        .update({ present: true, })
         .then(() => {
           // this.in_lobby = false
           // this.in_lobby_loading = true
           console.log("presence exito");
+          this.in_lobby_loading = true
         });
     },
     checkAnswer1() {
-      if (this.A_1_trivia[0].a === this.A_1_trivia[0].right_answer) {
+      
+      if (this.questions[0].right_answer === this.questions[0].answer1) {
         console.log("acertaste");
+      } else {
+        console.log("fallaste")
+        db.collection('A1-students')
+          .doc(this.user)
+          .update({answered: true, wrong: true, in_answer_loading: true , in_question:false })
+          .then(() => {
+
+          })
       }
-    }
+    },
+    checkAnswer2() {
+      if (this.questions[0].right_answer === this.questions[0].answer2) {
+        db.collection('A1-students')
+          .doc(this.user)
+          .update({answered: true, right: true, in_answer_loading: true , in_question:false })
+          .then(() => {
+            const increment = firebase.firestore.FieldValue.increment(10);
+            const triviaXpRef = db
+              .collection('A1-students')
+              .doc(this.user)
+              const batch = db.batch();
+              batch.set(triviaXpRef, {trivia_xp:increment}, {merge: true})
+              batch.commit().then(() => {
+                console.log('trivia xp aumentado')
+              })
+          })
+        console.log("acertaste");
+      } else {
+        console.log("fallaste")
+      }
+    },
   }
 };
 </script>
