@@ -42,8 +42,24 @@
         <h1>... cargando tu respuesta</h1>
       </div>
       <div v-if="in_question_result">
-        <v-card  height="100" width="100" color="green"></v-card>
-        <v-card height="100" width="100" color="red"></v-card>
+       <v-row class="fill-height" align="center" justify="center">
+ <v-card v-if="right"   color="green">
+          <v-row >
+          <h1>Correcto! </h1> 
+          </v-row>
+          <v-row>
+            <h1>+10XP</h1>
+          </v-row>
+          <v-row><v-chip dark>{{trivia_xp}}</v-chip></v-row>
+        </v-card>
+        <v-card v-if="wrong" height="100" width="100" color="red">
+            <v-row >
+          <h1>Incorrecto </h1>
+          </v-row>
+          <v-row><v-chip dark>{{trivia_xp}}</v-chip></v-row>
+        </v-card>
+       </v-row>
+       
       </div>
     </v-container>
   </div>
@@ -74,7 +90,9 @@ export default {
       in_lobby_loading: false,
       in_answer_loading:false,
       trivia_cover: "",
-      user: ""
+      user: "",
+      right:null,
+      wrong:null
     };
   },
   //simepre tratr de traer la info a la primer linea
@@ -108,9 +126,12 @@ export default {
       // }
     },
     student_states() {
+      // los watchers son para recibir getters bots?
       this.student_states.map(student => {
         if (student.email === this.user) {
           this.trivia_xp = student.trivia_xp
+          this.right = student.right
+          this.wrong = student.wrong
           if(student.in_answer_loading === true){
             this.in_answer_loading = true
             this.in_question = false

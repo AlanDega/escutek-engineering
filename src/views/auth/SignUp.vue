@@ -54,9 +54,13 @@ export default {
               .doc(this.email)
               .set({
                 alias: this.alias,
+                answer:null,
                 answered: false,
                 email: this.email,
                 group: this.selected_group,
+                in_answer_loading:null,
+                in_lobby_loading:null,
+                in_question:null,
                 trivia_xp:0,
                 question_xp:0,
                 place:0,

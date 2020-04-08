@@ -12,10 +12,14 @@
           <v-row justify="center">
             <v-card height="50" width="500" outlined class="mb-8">
               <v-row class="fill-height" justify="end" align="center">
-                <v-icon color="deep-purple accent-3" class="mr-4">mdi-magnify</v-icon>
+                <v-icon color="deep-purple accent-3" class="mr-4"
+                  >mdi-magnify</v-icon
+                >
               </v-row>
               <v-row>
-                <v-btn text @click="$router.push('/trivia-creator')">crea trivia</v-btn>
+                <v-btn text @click="$router.push('/trivia-creator')"
+                  >crea trivia</v-btn
+                >
               </v-row>
               <v-container>
                 <v-row>
@@ -66,14 +70,10 @@
                     <v-list-item two-line>
                       <v-list-item-content>
                         <v-list-item-title>
-                          {{
-                          trivia.title
-                          }}
+                          {{ trivia.title }}
                         </v-list-item-title>
                         <v-list-item-subtitle>
-                          {{
-                          trivia.description
-                          }}
+                          {{ trivia.description }}
                         </v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
@@ -88,7 +88,8 @@
                       class="mt-8 mr-6"
                       color="deep-purple accent-3"
                       dark
-                    >Juega</v-btn>
+                      >Juega</v-btn
+                    >
                   </v-row>
                 </v-col>
               </v-row>
@@ -129,7 +130,7 @@ export default {
       student_tokens: 0,
       dialog: false,
       fab: false,
-      trivia_questions: []
+      trivia_questions: [],
     };
   },
   computed: {
@@ -144,19 +145,19 @@ export default {
         default:
           return {};
       }
-    }
+    },
   },
   created() {
     this.classroom = this.$route.params.id;
   },
   mounted() {
-    firebase.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.user = user.email;
         db.collection("quizzes")
           .get()
-          .then(querySnapshot => {
-            const documents = querySnapshot.docs.map(doc => doc.data());
+          .then((querySnapshot) => {
+            const documents = querySnapshot.docs.map((doc) => doc.data());
             console.log("documents", documents);
             this.trivias = documents;
           });
@@ -168,25 +169,29 @@ export default {
     getTrivia(trivia) {
       this.group_dialog = true;
       this.selected_trivia = trivia.title;
-      this.selected_cover = trivia.cover_img
+      this.selected_cover = trivia.cover_img;
       db.collection("questions")
         .where("trivia", "==", this.selected_trivia)
         .get()
-        .then(querySnapshot => {
-          this.trivia_questions = querySnapshot.docs.map(doc => doc.data());
+        .then((querySnapshot) => {
+          this.trivia_questions = querySnapshot.docs.map((doc) => doc.data());
           console.log("trivia-questions", this.trivia_questions);
         });
     },
     setTrivia(group) {
       console.log("group", group);
-      db.collection('prof1@gmail.com-trivia-groups')
-        .doc(group)
-        .set({
-          group_trivia: this.selected_trivia,
-          trivia_cover: this.selected_cover,
-          
-        })
-      this.trivia_questions.map(q => {
+      db.collection("prof1@gmail.com-trivia-groups").doc(group).set({
+        group_trivia: this.selected_trivia,
+        trivia_cover: this.selected_cover,
+        active: null,
+        in_leaderboard: false,
+        in_lobby: false,
+        in_question: false,
+        in_question_result: false,
+        in_results: false,
+        question_index: 0,
+      });
+      this.trivia_questions.map((q) => {
         db.collection(group + "-trivia")
           .doc(q.question)
           .set({
@@ -197,12 +202,12 @@ export default {
             answer3: q.answer3,
             answer4: q.answer4,
             right_answer: q.right_answer,
-            actual_question: null
+            actual_question: null,
           });
       });
       this.$router.push("/prof-trivia-" + group);
-    }
-  }
+    },
+  },
 };
 </script>
 

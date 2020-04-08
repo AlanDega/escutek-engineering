@@ -194,20 +194,25 @@
         </v-row>
       </v-container>
     </div>
-    <div v-if="leaderboard">
+    <div v-if="in_leaderboard">
       <v-container class="graph">
+          <v-row align="start" justify="end">
+              <v-btn @click="nextQuestion" dark color="deep-purple accent-3"
+                >Siguiente</v-btn
+              >
+            </v-row>
         <v-row class="fill-height" justify="center" align="center">
           <v-card color="black" height="400" width="800">
-            <v-list>
+            <v-list dark>
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>
-                    <v-row v-for="(student, i) in top10" :key="i">
+                    <v-row v-for="(student, i) in top_9" :key="i">
                       <v-col cols="6">
-                        <!-- {{student.alias}} -->
+                        {{ student.alias }}
                       </v-col>
                       <v-col>
-                        <!-- {{student.trivia_xp}} -->
+                        {{ student.trivia_xp }}
                       </v-col>
                     </v-row>
                   </v-list-item-title>
@@ -282,10 +287,10 @@ export default {
       answer2: "",
       answer3: "",
       answer4: "",
-      right_answer:'',
+      right_answer: "",
       question_img: "",
-      leaderboard: false,
-      top10: [],
+      in_leaderboard: false,
+      top_9: [],
       students: [],
       present_students: [],
       group_trivia: "",
@@ -310,7 +315,10 @@ export default {
         }
         if (student.answered === true) {
           this.answered_students.push(student.alias);
-          if (this.answered_students.length === this.students.length) {
+          if (
+            this.answered_students.length === this.students.length &&
+            !this.in_leaderboard
+          ) {
             db.collection("prof1@gmail.com-trivia-groups")
               .doc("A1")
               .update({ in_question_result: true, in_question: false })
@@ -370,10 +378,10 @@ export default {
       // posiblemente tenga que actualizar aqui actual questio nantes de padaral a trivia status
     },
     trivia_status() {
-      if (this.trivia_status[0].in_question_result === true) {
-        this.in_question = false;
-        this.in_question_result = true;
-      }
+      // if (this.trivia_status[0].in_question_result === true) {
+      //   this.in_question = false;
+      //   this.in_question_result = true;
+      // }
       if (this.trivia_status[0].in_lobby === true) {
         console.log("true");
         // this.in_question = false
@@ -395,32 +403,27 @@ export default {
       this.answer4 = this.A1trivia[this.actual_question].answer4;
       this.right_answer = this.A1trivia[this.actual_question].right_answer;
       this.in_question = this.trivia_status[0].in_question;
+      this.in_question_result = this.trivia_status[0].in_question_result;
+      this.in_leaderboard = this.trivia_status[0].in_leaderboard;
       this.group_trivia = this.trivia_status[0].group_trivia;
       this.cover_img = this.trivia_status[0].trivia_cover;
     },
   },
   mounted() {
-    // db.collection(this.A_1_trivia[0].title)
-    //   .get()
-    //   .then(querySnapshot => {
-    //     const documents = querySnapshot.docs.map(doc => doc.data())
-    //     console.log('questions-docs',documents)
-    //     // despues de este array vamos aunmnetado el index en next question
-    //   })
-    // aqui traemos todas las preguntas
-    // firebase.auth().onAuthStateChanged(user => {
-    //   this.user = user.email;
-    //   db.collection('A_1_trivia')
-    //     .doc('trivia')
-    //     .get()
-    //     .then(snapshot => {
-    //       const document = snapshot.data()
-    //       console.log('doc',document)
-    //     })
-    // });
-    //if place 1 100%
+    db.collection("A1-students")
+      .orderBy("trivia_xp", "desc")
+      .limit(9)
+      .get()
+      .then((querySnapshot) => {
+        const documents = querySnapshot.docs.map((doc) => doc.data());
+        this.top_9 = documents;
+      });
   },
   methods: {
+  nextQuestion(){
+    db.collection('prof1@gmail.com-trivias-group')
+  },
+    // in the next question method use increment and clear fields
     initializeTrivia() {
       db.collection("prof1@gmail.com-trivia-groups")
         .doc("A1")
@@ -428,8 +431,21 @@ export default {
         .then(() => console.log("trivia init"));
     },
     showLeaderboard() {
-      db.collection();
-      this.actual_index++;
+      db.collection("A1-students")
+        .orderBy("trivia_xp", "desc")
+        .limit(9)
+        .get()
+        .then((querySnapshot) => {
+          const documents = querySnapshot.docs.map((doc) => doc.data());
+          this.top_9 = documents;
+        });
+
+      db.collection("prof1@gmail.com-trivia-groups")
+        .doc("A1")
+        .update({ in_leaderboard: true, in_question_result: false })
+        .then(() => {
+          console.log("state change to leaderboard");
+        });
     },
   },
 };
